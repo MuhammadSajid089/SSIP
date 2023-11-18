@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>To-Do App</title>
+</head>
+<body>
+
+<div id="container">
+    <h1>To-Do App</h1>
+    <input type="text" id="taskInput" placeholder="Add a new task">
+    <button onclick="addTask()">Add Task</button>
+
+    <h2>Pending Tasks</h2>
+    <ul id="pendingTasks"></ul>
+
+    <h2>Completed Tasks</h2>
+    <ul id="completedTasks"></ul>
+</div>
+
+<script>
+    function addTask() {
+        const taskInput = document.getElementById("taskInput");
+        const taskText = taskInput.value.trim();
+
+        if (taskText !== "") {
+            const task = {
+                text: taskText,
+                addedDate: new Date(),
+                completed: false,
+                completedDate: null
+            };
+
+            tasks.push(task);
+            updateLists();
+            taskInput.value = "";
+        }
+    }
+
+    function toggleComplete(index) {
+        tasks[index].completed = !tasks[index].completed;
+        tasks[index].completedDate = tasks[index].completed ? new Date() : null;
+        updateLists();
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        updateLists();
+    }
+
+    function updateLists() {
+        const pendingTasksList = document.getElementById("pendingTasks");
+        const completedTasksList = document.getElementById("completedTasks");
+
+        pendingTasksList.innerHTML = "";
+        completedTasksList.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <span class="${task.completed ? 'completed' : ''}">${task.text}</span>
+                <span>${task.addedDate.toLocaleString()}</span>
+                <span>${task.completed ? task.completedDate.toLocaleString() : ''}</span>
+                <button onclick="toggleComplete(${index})">${task.completed ? 'Undo' : 'Complete'}</button>
+                <button onclick="deleteTask(${index})">Delete</button>
+            `;
+
+            if (task.completed) {
+                completedTasksList.appendChild(li);
+            } else {
+                pendingTasksList.appendChild(li);
+            }
+        });
+    }
+
+    const tasks = [];
+
+    // You can prepopulate tasks for testing
+    // tasks.push({ text: "Example Task 1", addedDate: new Date(), completed: false, completedDate: null });
+    // tasks.push({ text: "Example Task 2", addedDate: new Date(), completed: true, completedDate: new Date() });
+
+    updateLists();
+</script>
+
+</body>
+</html>
